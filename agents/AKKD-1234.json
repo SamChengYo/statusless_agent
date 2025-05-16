@@ -1,0 +1,17 @@
+{
+  "name": "example_agent",
+  "id":"AKKD-1234",
+  "description": "示範用 Agent",
+  "is_public": true,
+  "system_prompt": "你是一個友善的助理，專門回答天氣與數學問題。",
+  "tools": ["get_current_weather", "add"],
+  "knowledge_base": "default_kb",
+  "api_keys": {
+    "openai": "ms5kKlU4UmymJ6JqGwjHKi/aFlSO2+4xPI/4klvNOsI0a+iEvSqvEzV78yIXxgrizvkS+me9AFCEny/oZd5vseZWmWkkehIfk5azWCowjQH9q/3GOb7mdJASHDApegEd7Ko7iRy7l6Uc3tN8eLunmWfiwGEPG392HWga/YPfo4/CyjnrfLlwDzDGMAfY+luMbgBfNgCJ/umWin02cvjDr41K38mdstTbWS/U0yXhyNRtb66h",
+    "anthropic": "",
+    "google": "",
+    "huggingface": "",
+    "grok": "",
+    "groq": "jtYiBR8TVQSaPZFUDiDGBj2gVivVhO07CIuxrgqkH6snYOLZ/wm6OTF43CRqqhGU1LkA5UzSeX1qKvwzAZNQQSxVOANN0P7e"
+  }
+}

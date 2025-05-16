@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unicorn AI Agent 平台 Demo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Unicorn AI Agent 平台 Demo</h1>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="create-agent">創建 Agent</button>
+            <button class="tab-btn" data-tab="manage-tools">管理工具</button>
+            <button class="tab-btn" data-tab="chat">聊天</button>
+        </div>
+
+        <div class="tab-content">
+            <!-- 創建 Agent 頁面 -->
+            <div class="tab-pane active" id="create-agent">
+                <h2>創建新 Agent</h2>
+                <form id="agent-form">
+                    <div class="form-group">
+                        <label for="agent-name">名稱</label>
+                        <input type="text" id="agent-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-description">描述</label>
+                        <textarea id="agent-description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-public">公開</label>
+                        <input type="checkbox" id="agent-public">
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-prompt">系統提示詞</label>
+                        <textarea id="agent-prompt" required>你是一個熱心助人的幫手。</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>工具</label>
+                        <div id="tools-list">
+                            <div class="tool-item">
+                                <input type="checkbox" id="tool-get_current_weather" checked>
+                                <label for="tool-get_current_weather">get_current_weather (取得天氣)</label>
+                            </div>
+                            <!-- 由於我們還沒有創建這些工具，先註釋掉
+                            <div class="tool-item">
+                                <input type="checkbox" id="tool-get_time" checked>
+                                <label for="tool-get_time">get_time</label>
+                            </div>
+                            <div class="tool-item">
+                                <input type="checkbox" id="tool-add" checked>
+                                <label for="tool-add">add</label>
+                            </div>
+                            -->
+                        </div>
+                        <p class="form-hint">注意：請確保選擇的工具已在系統中註冊</p>
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-kb">知識庫</label>
+                        <input type="text" id="agent-kb">
+                    </div>
+                    <div class="form-group">
+                        <label>API 密鑰</label>
+                        <div class="api-keys">
+                            <div class="api-key-item">
+                                <label for="api-openai">OpenAI</label>
+                                <input type="password" id="api-openai">
+                            </div>
+                            <div class="api-key-item">
+                                <label for="api-anthropic">Anthropic</label>
+                                <input type="password" id="api-anthropic">
+                            </div>
+                            <div class="api-key-item">
+                                <label for="api-google">Google</label>
+                                <input type="password" id="api-google">
+                            </div>
+                            <div class="api-key-item">
+                                <label for="api-huggingface">HuggingFace</label>
+                                <input type="password" id="api-huggingface">
+                            </div>
+                            <div class="api-key-item">
+                                <label for="api-grok">Grok</label>
+                                <input type="password" id="api-grok">
+                            </div>
+                            <div class="api-key-item">
+                                <label for="api-groq">Groq</label>
+                                <input type="password" id="api-groq">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="agent-password">密碼</label>
+                        <input type="password" id="agent-password" required>
+                        <p class="form-hint">注意：密碼用於加密 API 密鑰，需要加密服務在 http://localhost:1212 運行</p>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="skip-encryption" checked>
+                        <label for="skip-encryption">跳過 API 密鑰加密（如果加密服務不可用）</label>
+                    </div>
+                    <button type="submit" class="btn">創建 Agent</button>
+                </form>
+                <div class="result" id="agent-result"></div>
+            </div>
+
+            <!-- 管理工具頁面 -->
+            <div class="tab-pane" id="manage-tools">
+                <h2>創建新工具</h2>
+                <form id="tool-form">
+                    <div class="form-group">
+                        <label for="tool-type">類型</label>
+                        <select id="tool-type" required>
+                            <option value="function">函數</option>
+                            <option value="api">API</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tool-name">名稱</label>
+                        <input type="text" id="tool-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tool-content">內容</label>
+                        <textarea id="tool-content" required></textarea>
+                    </div>
+                    <div class="form-group api-only">
+                        <label for="tool-description">描述</label>
+                        <textarea id="tool-description"></textarea>
+                    </div>
+                    <button type="submit" class="btn">創建工具</button>
+                </form>
+                <div class="result" id="tool-result"></div>
+            </div>
+
+            <!-- 聊天頁面 -->
+            <div class="tab-pane" id="chat">
+                <h2>與 Agent 聊天</h2>
+                <div class="chat-config">
+                    <div class="form-group">
+                        <label for="chat-agent-id">Agent ID</label>
+                        <input type="text" id="chat-agent-id" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="chat-model">模型</label>
+                        <select id="chat-model" required>
+                            <option value="gpt-4.1">GPT-4.1 (OpenAI)</option>
+                            <option value="claude-3-7-sonnet-20250219">Claude 3.7 Sonnet (Anthropic)</option>
+                            <option value="gemini/gemini-2.5-pro-exp-03-25">Gemini 2.5 Pro (Google)</option>
+                            <option value="ollama/llama3:70b">Llama 3 70B (Ollama)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="chat-provider">提供商</label>
+                        <select id="chat-provider" required>
+                            <option value="openai">OpenAI</option>
+                            <option value="anthropic">Anthropic</option>
+                            <option value="google">Google</option>
+                            <option value="ollama">Ollama</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="chat-temperature">溫度</label>
+                        <input type="range" id="chat-temperature" min="0" max="1" step="0.1" value="0.7">
+                        <span id="temperature-value">0.7</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="chat-max-tokens">最大 Token 數</label>
+                        <input type="number" id="chat-max-tokens" value="1500" min="1" max="8000">
+                    </div>
+                    <div class="form-group">
+                        <label for="chat-streaming">流式輸出</label>
+                        <input type="checkbox" id="chat-streaming" checked>
+                    </div>
+                    <div class="form-group">
+                        <label for="chat-password">密碼</label>
+                        <input type="password" id="chat-password" required>
+                    </div>
+                </div>
+                <div class="chat-container">
+                    <div class="chat-messages" id="chat-messages"></div>
+                    <div class="chat-input">
+                        <textarea id="user-input" placeholder="輸入訊息..."></textarea>
+                        <button id="send-btn" class="btn">發送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
